@@ -1,0 +1,13 @@
+import re
+with open('data_leak_sample.txt', 'r', encoding='utf-8') as f:
+    f = f.read()
+    def find_system_info(text):
+        IPs = re.findall(r'\d{1,3}[.]\d{1,3}[.]\d{1,3}[.]\d{1,3}',text)
+        for ip in IPs:
+            for block in ip.split('.'):
+                if int(block) > 255:
+                    IPs.remove(ip)
+        EMAILs = re.findall(r'[\w\.-]+@[\w\.-]+', text)
+        return {'ips': [IPs],
+                'emails': [EMAILs]}
+print(find_system_info('text'))

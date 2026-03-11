@@ -1,0 +1,28 @@
+with open('data_leak_sample.txt', 'r', encoding='utf-8') as f:
+    all_cards = f.read()
+    import re
+    def find_and_validate_credit_cards(text):
+        pattern = r'\d{4}[- ]\d{4}[- ]\d{4}[- ]\d{4}' # Шаблон для банковских карт: без проверки
+        only_cards = re.findall(pattern, text, flags=0)
+        valid_cards = []
+        invalid_cards = []
+        for card in only_cards:
+            card = re.split('[- ]', card)
+            ctrl_sum = 0
+            for j in card:
+                for k in range(0,4):
+                    if k%2!=0:
+                        ctrl_sum += int(j[k])
+                    else:
+                        num = 2*int(j[k])
+                        if num>10:
+                            num -= 9
+                        ctrl_sum += num
+            if ctrl_sum % 10 == 0:
+                valid_cards.append(card)
+            else:
+                invalid_cards.append(card)
+        return {'valid': [valid_cards],
+                'invalid': [invalid_cards]
+                }
+print(find_and_validate_credit_cards(all_cards))
